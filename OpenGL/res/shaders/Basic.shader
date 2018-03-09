@@ -16,7 +16,12 @@ void main()
 //create position co-ordinate and tell open gl at what index is it located i.e. 0 in our case
 layout(location = 0) out vec4 color;	
 
+/* Define a uniform to recieve data from the c++ side (CPU) */
+/* Convention: anything beginning with u_ is a uniform variable */
+uniform vec4 u_Color;
+
 void main()
 {
-	color = vec4(0.2,0.8, 0.3, 1.0);
+	/* Specify the output color of each pixel */
+	color = u_Color;
 };
