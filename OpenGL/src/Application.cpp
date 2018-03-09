@@ -127,6 +127,11 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
+	/* Switch to OpenGL core profile */
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
 	if (!window)
@@ -157,6 +162,12 @@ int main(void)
 		0, 1, 2,
 		2, 3, 0
 	};
+
+	/* Create a Vertex Array Object(VAO) */
+	unsigned int vao;
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
+
 	//Create a buffer on the gpu, i.e. vertex buffer
 	unsigned int buffer;
 	// The ID of the buffer is written into the unsigned int
@@ -167,8 +178,9 @@ int main(void)
 	GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), &positions, GL_STATIC_DRAW)); // Pass array and not the array pointer
 
 	//Tell openGL the layout of the memory, the buffer should be bound before doing this 
+	// Also binds vertex array object to our vertex buffer
 	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-	//Enable the vertex attrib pointer
+	//Enable the vertex attrib pointer 
 	GLCall(glEnableVertexAttribArray(0));
 
 	/* Create an index buffer object on the GPU */
@@ -192,6 +204,12 @@ int main(void)
 	ASSERT(location != -1);
 	GLCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
 
+	/* Unbind everything for vertex array demostration */
+	GLCall(glBindVertexArray(0));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	GLCall(glUseProgram(0));
+
 	/* Variables to change the color of the rectangle */
 	float increment = 0.05f;
 	float r = 0.8f; 
@@ -202,10 +220,13 @@ int main(void)
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+		/* Bind all the buffers again before issuing a draw call */
+		GLCall(glUseProgram(shader));
+		GLCall(glBindVertexArray(vao));
+		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+
 		// set the colors on the fly
 		GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
-		// Issue draw call for the buffer
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		/* glDrawElements is used to draw from the index buffers */
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // Nullpointer because the buffer has already been bound
 
