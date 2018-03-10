@@ -6,3 +6,13 @@
 //	Bind Shader -> Bind Vertex Array -> Bind Index Buffer -> Issue a draw call 
 
 /* Abstracting the code */
+
+//	RENDERER - Give it a command and render the thing for me Draw(attributes) - Draws the thing for us 
+
+/* POINTERS */
+
+// Just an integer, that stores 1 memory address, all pointers are the same. Its just an integer that holds a memory address. 
+// References are just aliases for variables. 
+// Arrays - Collection of variables, grouped together. (Usually of the same type)
+// Arrays in itself are just memory pointers 
+
