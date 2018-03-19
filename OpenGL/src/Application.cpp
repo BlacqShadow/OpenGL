@@ -6,97 +6,14 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
+#include "Texture.h"
 
-/* To return multiple return type we need to create a struct that we can return*/
-struct ShaderProgramSource
-{
-	std::string VertexSource;
-	std::string FragmentSource; 
-};
-
-/* Open Baisc.shader file and read in the two different shaders */
-static ShaderProgramSource ParseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-	
-	/* Shader type that we are reading in. */
-	enum class ShaderType
-	{
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	};
-	std::string line;
-	std::stringstream ss[2];
-	ShaderType type = ShaderType::NONE;
-
-	/* Find out where the data different shaders start in out shader file */
-	while (getline(stream, line))
-	{
-		/* if it finds shader on the line */
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != std::string::npos)
-				type = ShaderType::FRAGMENT;
-		}
-		/* If there is any other line, just add it to the source code of the vertex/fragment shaders*/
-		else
-		{
-			ss[(int)type] << line << '\n';
-		}
-	}
-	/* Multiple return types using a struct. */
-	return { ss[0].str(), ss[1].str() };
-}
-
-
-static unsigned int CompileShader(unsigned int type, const std::string& source)
-{
-	// Create a shader based on the type passed in
-	GLCall(unsigned int id = glCreateShader(type));
-	const char* src = source.c_str();
-	// Pass in the source code of the shader
-	GLCall(glShaderSource(id, 1, &src, nullptr));
-	GLCall(glCompileShader(id));
-
-	int result;
-	// Error Checking
-	// Query glCompileShader for any errors
-	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-	if (result == GL_FALSE)
-	{
-		int length;
-		GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
-		char* message = (char*)alloca(length * sizeof(char));
-		GLCall(glGetShaderInfoLog(id, length, &length, message));
-		std::cout << " Failed to compile " << 
-			(type == GL_VERTEX_SHADER ? "Vertex Shader: " : "Fragment Shader: ") << message <<  std::endl;
-		GLCall(glDeleteShader(id));
-		return -1;
-	}
-	return id; 
-}
-
-/* Compile the source code for both shaders, link them together in a program and return an index to that program */
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-	GLCall(unsigned int program = glCreateProgram());
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-	// Attach both the shaders to the program object
-	GLCall(glAttachShader(program, vs));
-	GLCall(glAttachShader(program, fs));
-	// Link them together in the program
-	GLCall(glLinkProgram(program));
-	// Checks if the program can be executed in the current state of the machine. 
-	GLCall(glValidateProgram(program));
-
-	GLCall(glDeleteShader(vs));
-	GLCall(glDeleteShader(fs));
-
-	return program;
-}
+// GLM Math Library
+#include "glm\glm.hpp"
+#include "glm\gtc\matrix_transform.hpp"
 
 int main(void)
 {
@@ -112,7 +29,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "Hello World", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -130,11 +47,13 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	// Add a scope so that the objects ib and vb objects are destroyed before the openGL context
 	{
+		// First two are Vertex positions,
+		// Next Two(same lines) - texture co-ordinates. (0.0 start, 1.0 finish)(Starts bottom left)
 		float positions[] = {
-			-0.5f, -0.5f, // 0
-			 0.5f, -0.5f, // 1
-			 0.5f,  0.5f, // 2
-			-0.5f,  0.5f // 3
+			-0.5f, -0.5f, 0.0f, 0.0f,// 0
+			 0.5f, -0.5f, 1.0f, 0.0f,// 1
+			 0.5f,  0.5f, 1.0f, 1.0f,// 2
+			-0.5f,  0.5f, 0.0f, 1.0f // 3
 		};
 
 		/* To prevent vertex duplication, using indices to refer to the vertex we need to draw a square. */
@@ -142,62 +61,68 @@ int main(void)
 			0, 1, 2,
 			2, 3, 0
 		};
+		
+		/* BLENDING */
+		// Enable blending
+		GLCall(glEnable(GL_BLEND));
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-		/* Create a Vertex Array Object(VAO) */
-		unsigned int vao;
-		GLCall(glGenVertexArrays(1, &vao));
-		GLCall(glBindVertexArray(vao));
-
+		// Create a Vertex Array Object
+		VertexArray va;
 		// Create a Vertex buffer
-		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-
-
-		//Tell openGL the layout of the memory, the buffer should be bound before doing this 
-		// Also binds vertex array object to our vertex buffer
-		GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-		//Enable the vertex attrib pointer 
-		GLCall(glEnableVertexAttribArray(0));
+		VertexBuffer vb(positions, 4 * 4 * sizeof(float));
+		// Create the layout of the buffer
+		VertexBufferLayout layout;
+		// Tell the layout that each vertex is made out of two floats
+		layout.Push<float>(2);
+		layout.Push<float>(2);	// For the texture co-ordinates
+		// Add the buffer to the Vertex Array object
+		// Add the layout to the VAO
+		va.AddBuffer(vb, layout);
 
 		IndexBuffer ib(indices, 6);
 
+		// Creating the projection matrix (specify a 4:3 ratio) 
+		// We will use this matrix to render to our 4:3 aspect ration window 
+		// Note: Orthographic Matrix (Orthographic Projection) does not use a perspective projection (Objects get small as they go away) 
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.125f, 1.125f, -1.0f, 1.0f);
 
-		ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
-
-		unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-		GLCall(glUseProgram(shader));
-
-		/* After the shader is bound, data can be sent to it */
-		// Get the location of the uniform variable from the shader
-		GLCall(int location = glGetUniformLocation(shader, "u_Color"));
-		// If open GL deletes the uniform as it is not being used return an error
-		ASSERT(location != -1);
-		GLCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
+		Shader shader("res/shaders/Basic.shader");
+		shader.Bind();
+		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+		// Pass in a uniform with the slot the texture is bound to. 
+		shader.SetUniform1i("u_Texture", 0);
+		Texture texture("res/textures/valencia.png");
+		// SET the projection matrix in the shader
+		shader.SetUniformMat4f("u_MVP", proj);
 
 		/* Unbind everything for vertex array demostration */
-		GLCall(glBindVertexArray(0));
-		GLCall(glUseProgram(0));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		va.Unbind();
+		vb.Unbind();
+		ib.Unbind();
+		shader.Unbind();
+		texture.Bind();
+		// Bind the texture
 
 		/* Variables to change the color of the rectangle */
 		float increment = 0.05f;
 		float r = 0.8f;
 
+		Renderer renderer;
+
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
 			/* Render here */
-			GLCall(glClear(GL_COLOR_BUFFER_BIT));
+			renderer.Clear();
 
 			/* Bind all the buffers again before issuing a draw call */
-			GLCall(glUseProgram(shader));
+			shader.Bind();
 			// set the colors on the fly
-			GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
-			GLCall(glBindVertexArray(vao));
-			ib.Bind();
-
-			/* glDrawElements is used to draw from the index buffers */
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // Nullpointer because the buffer has already been bound
+			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+	
+			// Use the renderer to draw stuff 
+			renderer.Draw(va, ib, shader);
 
 			/* Change the r values as the program loops*/
 			if (r > 1.0f)
@@ -212,8 +137,6 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
-
-		GLCall(glDeleteProgram(shader));
 	}
 	glfwTerminate();
 	return 0;
