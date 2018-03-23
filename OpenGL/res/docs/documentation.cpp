@@ -65,3 +65,17 @@
 *		Directional: 
 *
 */
+
+/* PROJECTION MATRICES
+*	Projection - how to go from having co-ordinates to map them to the window (2d object), project the 3d world on a 2d space. 
+*	Maths that converts 3d points in space into a 2D window. 
+*	Normalized space - Co-ordinate system between -1 to 1 in x, y, z
+*	Projection Matrix - converts our co-ordinates to the normalized co-ordinate space. 
+*/
+
+/* PROJECTIONS 
+*	ORTHOGRAPHIC - Usually* used for 2D rendering
+*		* 
+*	PERSCPECTIVE - Usually* used for 3D stuff
+*		*
+/

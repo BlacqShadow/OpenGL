@@ -87,6 +87,15 @@ int main(void)
 		// Note: Orthographic Matrix (Orthographic Projection) does not use a perspective projection (Objects get small as they go away) 
 		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.125f, 1.125f, -1.0f, 1.0f);
 
+		/******** MATH LIBRARY TESTING ************************************/
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	
+		glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		printf("%f, %f, %f, %f\n", result.x, result.y, result.z, result.w);
+		std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;
+		/*******************************************************************/
+
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
