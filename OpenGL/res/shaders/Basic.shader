@@ -11,9 +11,12 @@ out vec2 v_TexCoord;
 // MODEL VIEW PROJECTION MATRIX
 uniform mat4 u_MVP; 
 
+// Math Matrix Delete or comment when working with the cherno project again
+uniform mat4 u_Rotation;
+
 void main()
 {
-	gl_Position = u_MVP * position;
+	gl_Position = u_MVP * position * u_Rotation;
 	v_TexCoord = texCoord;
 };
 

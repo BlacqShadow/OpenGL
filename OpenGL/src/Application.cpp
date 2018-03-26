@@ -15,6 +15,9 @@
 #include "glm\glm.hpp"
 #include "glm\gtc\matrix_transform.hpp"
 
+// Math-Time Library Testing
+#include <chrono>
+
 int main(void)
 {
 	GLFWwindow* window;
@@ -88,12 +91,13 @@ int main(void)
 		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.125f, 1.125f, -1.0f, 1.0f);
 
 		/******** MATH LIBRARY TESTING ************************************/
-		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		// Calculate transformation
+		auto t_start = std::chrono::high_resolution_clock::now();
+		
 	
-		glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-		printf("%f, %f, %f, %f\n", result.x, result.y, result.z, result.w);
-		std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;
+		
+		//printf("%f, %f, %f, %f\n", result.x, result.y, result.z, result.w);
+		//std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;
 		/*******************************************************************/
 
 		Shader shader("res/shaders/Basic.shader");
@@ -104,6 +108,10 @@ int main(void)
 		Texture texture("res/textures/valencia.png");
 		// SET the projection matrix in the shader
 		shader.SetUniformMat4f("u_MVP", proj);
+		/*************************Math Library Testing*******************************/
+		std::cout << "Setting the rotation matrix in the shader" << std::endl;
+		
+		/**************************/
 
 		/* Unbind everything for vertex array demostration */
 		va.Unbind();
@@ -128,8 +136,19 @@ int main(void)
 			/* Bind all the buffers again before issuing a draw call */
 			shader.Bind();
 			// set the colors on the fly
+
 			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 	
+			//MATH LIBRARY CODE
+			auto t_now = std::chrono::high_resolution_clock::now();
+			float time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+
+			glm::mat4 trans = glm::mat4(1.0f);
+			glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			trans = glm::rotate(trans, time * glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			shader.SetUniformMat4f("u_Rotation", trans);
+
+			/*************************************************************************************/
 			// Use the renderer to draw stuff 
 			renderer.Draw(va, ib, shader);
 
