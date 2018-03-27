@@ -79,3 +79,10 @@
 *	PERSCPECTIVE - Usually* used for 3D stuff
 *		*
 /
+
+/*	MESHES
+*	Artists generally design models in pieces, e.g. the head, the torso, the legs etc.\
+*	Each of these pieces are called meshes and contain data like the vertex co-ordinates, texture co-ordinates, vertex normals etc. 
+*	To load a model we load all these meshes up one by one, to render the object i.e. an object is a collection of multiple meshes. 
+*	For more information, see the green box on: https://learnopengl.com/Model-Loading/Assimp
+*/
