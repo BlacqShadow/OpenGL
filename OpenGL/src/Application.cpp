@@ -50,10 +50,10 @@ int main(void)
 		// First two are Vertex positions,
 		// Next Two(same lines) - texture co-ordinates. (0.0 start, 1.0 finish)(Starts bottom left)
 		float positions[] = {
-			-0.5f, -0.5f, 0.0f, 0.0f,// 0
-			 0.5f, -0.5f, 1.0f, 0.0f,// 1
-			 0.5f,  0.5f, 1.0f, 1.0f,// 2
-			-0.5f,  0.5f, 0.0f, 1.0f // 3
+			100.0f, 100.0f, 0.0f, 0.0f,// 0
+			200.0f, 100.0f, 1.0f, 0.0f,// 1
+			200.0f, 200.0f, 1.0f, 1.0f,// 2
+			100.0f, 200.0f, 0.0f, 1.0f // 3
 		};
 
 		/* To prevent vertex duplication, using indices to refer to the vertex we need to draw a square. */
@@ -85,15 +85,24 @@ int main(void)
 		// Creating the projection matrix (specify a 4:3 ratio) 
 		// We will use this matrix to render to our 4:3 aspect ration window 
 		// Note: Orthographic Matrix (Orthographic Projection) does not use a perspective projection (Objects get small as they go away) 
-		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.125f, 1.125f, -1.0f, 1.0f);
+		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+
+		// If we are trying to move the comera to the right, then
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+		// Creating a model matrix
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+		glm::mat4 mvp = proj * view * model;
+
+		/*glm::vec4 result = proj * vp;*/
 
 		/******** MATH LIBRARY TESTING ************************************/
-		glm::mat4 trans = glm::mat4(1.0f);
+		/*glm::mat4 trans = glm::mat4(1.0f);
 		trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	
 		glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 		printf("%f, %f, %f, %f\n", result.x, result.y, result.z, result.w);
-		std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;
+		std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;*/
 		/*******************************************************************/
 
 		Shader shader("res/shaders/Basic.shader");
@@ -103,7 +112,7 @@ int main(void)
 		shader.SetUniform1i("u_Texture", 0);
 		Texture texture("res/textures/valencia.png");
 		// SET the projection matrix in the shader
-		shader.SetUniformMat4f("u_MVP", proj);
+		shader.SetUniformMat4f("u_MVP", mvp);
 
 		/* Unbind everything for vertex array demostration */
 		va.Unbind();

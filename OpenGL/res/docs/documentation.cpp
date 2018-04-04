@@ -79,3 +79,9 @@
 *	PERSCPECTIVE - Usually* used for 3D stuff
 *		*
 /
+
+/* CAMERA
+	What is a camera ? 
+	It doesn't actually exist,  so you just move the geometry around, that is what happens in game engines aswell 
+	It is just more intuitive this way. 
+*/
