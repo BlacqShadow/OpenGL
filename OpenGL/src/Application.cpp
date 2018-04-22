@@ -94,6 +94,19 @@ int main(void)
 
 		glm::mat4 mvp = proj * view * model;
 
+		/* IGUI */
+		// Setup ImGui binding
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+		ImGui_ImplGlfwGL3_Init(window, true);
+
+		// Setup style
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsClassic();
+
+
 		/*glm::vec4 result = proj * vp;*/
 
 		/******** MATH LIBRARY TESTING ************************************/
@@ -148,6 +161,12 @@ int main(void)
 			else if (r < 0.0f)
 				increment = 0.05f;
 			r += increment;
+			// Rendering
+			int display_w, display_h;
+			glfwGetFramebufferSize(window, &display_w, &display_h);
+			glViewport(0, 0, display_w, display_h);
+			ImGui::Render();
+			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
