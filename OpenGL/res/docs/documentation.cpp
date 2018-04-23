@@ -90,3 +90,14 @@
 	3. To get the position the camera is pointing at you just the position of the camera and the position of the object it is trying to look at, substract those two vectors
 		and you get a direction vector to where the camera is pointing towards. 
 */
+
+
+
+/*********************************CPP********************************
+STATIC
+	Outside a class: internal linkage - only visible to that Translation unit (cpp file), like declaring a private variable to a cpp file
+	Inside: Will share memory with all the instances of the class
+	functions: no instance of the class will be passed into the menthod. 
+
+
+*********************************************************************/

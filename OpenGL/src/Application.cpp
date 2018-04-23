@@ -10,6 +10,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Texture.h"
+#include "Camera.h"
 
 // GLM Math Library
 #include "glm\glm.hpp"
@@ -19,8 +20,23 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 
+
+// Keep track of time between frames
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+// Define instances
+glm::vec3 Camera::m_CameraPosition;
+glm::vec3 Camera::m_CameraFront;
+glm::vec3 Camera::m_CameraUp;
+float Camera::m_CameraSpeed = deltaTime * 2.5f;
+
+
+
+
 int main(void)
 {
+	// Keep track of deltatime
 	GLFWwindow* window;
 
 	/* Initialize the library */
@@ -87,39 +103,18 @@ int main(void)
 
 		IndexBuffer ib(indices, 6);
 
-		// Creating the projection matrix (specify a 4:3 ratio) 
-		// We will use this matrix to render to our 4:3 aspect ration window 
-		// Note: Orthographic Matrix (Orthographic Projection) does not use a perspective projection (Objects get small as they go away) 
-		// glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-
 		// Using a perspective matrix instead
 		glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
 
-
-		
 		// Creating a model matrix
-		//glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 model;
 		
-
-		/*glm::vec4 result = proj * vp;*/
-
-		/******** MATH LIBRARY TESTING ************************************/
-		/*glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	
-		glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-		printf("%f, %f, %f, %f\n", result.x, result.y, result.z, result.w);
-		std::cout << std::fixed << result.x << ", " << result.y << ", " << result.z << ", " << result.w << std::endl;*/
-		/*******************************************************************/
-
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 		// Pass in a uniform with the slot the texture is bound to. 
 		shader.SetUniform1i("u_Texture", 0);
 		Texture texture("res/textures/ChernoLogo.png");
-		
 
 		/* Unbind everything for vertex array demostration */
 		va.Unbind();
@@ -129,10 +124,6 @@ int main(void)
 		texture.Bind();
 		// Bind the texture
 
-		/* Variables to change the color of the rectangle */
-		float increment = 0.05f;
-		float r = 0.8f;
-
 		Renderer renderer;
 
 		// IMGUI CODE
@@ -141,58 +132,51 @@ int main(void)
 		ImGui_ImplGlfwGL3_Init(window, true);
 		ImGui::StyleColorsDark();
 
-		glm::mat4 view = glm::mat4(1.0f);
-		// Variable to control the position of the camera
-		glm::vec3 cameraPosition(0.00f, 0.0f, 3.0f);
+		//Variables for pitch and yaw
+		float pitch;
+		float yaw;
+
+
+		/************************************************************************/
+		Camera camera(window);
+		// Variables to control the camera
+		Camera::m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);		// Position of the camera
+		Camera::m_CameraFront = glm::vec3(0.0f, 0.0f, -1.0f);		// The direction vector we want the camera to be looking at
+		Camera::m_CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);		
+		/************************************************************************/
+
+
+
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
 			/* Render here */
 			renderer.Clear();
-
+			float currentFrame = glfwGetTime();
+			deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
 
-
-			// view matrix is how we view the camera
-			// lookAt() function simulates a moving camera 
-			glm::mat4 view = glm::lookAt(
-				cameraPosition,					// position of the camera
-				glm::vec3(0.0f, 0.0f, 0.0f),	// The point the camera will be looking at 
-				glm::vec3(0.0f, 1.0f, 0.0f)		// The up axis, used to calculate the correct co-ordinate axis for the view matrix
-			);					
-			//glm::mat4 view;
-			//view = glm::translate(view, cameraPosition);
+			// Start polling for continous input
+			camera.processInput();
 
 			/* Bind all the buffers again before issuing a draw call */
 			shader.Bind();
 			// set the colors on the fly
-			shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 
 			//Keep the matrices updated in real time
-			glm::mat4 mvp = proj * view * model;
+			glm::mat4 mvp = proj * camera.GetViewMatrix() * model;
 			// SET the projection matrix in the shader
 			shader.SetUniformMat4f("u_MVP", mvp);
-
-
-	
 			// Use the renderer to draw stuff 
 			renderer.Draw(va, ib, shader);
-
-			/* Change the r values as the program loops*/
-			if (r > 1.0f)
-				increment = -0.05f;
-			else if (r < 0.0f)
-				increment = 0.05f;
-			r += increment;
-
+			
 			// IMGUI STUFF
 			{
-				//ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);
-				//ImGui::SliderFloat3("Camera Position", glm::value_ptr(cameraPosition) , -1.0f, 1.5f);
-				ImGui::SliderFloat("X-Axis", &cameraPosition.x, -0.5f, 0.5f);
-				ImGui::SliderFloat("Y-Axis", &cameraPosition.y, -0.5f, 0.5f);
-				ImGui::SliderFloat("Z-Axis", &cameraPosition.z, -10.0f, 12.0f);
+				ImGui::SliderFloat("X-Axis", &Camera::m_CameraPosition.x, -10.0f, 10.0f);
+				ImGui::SliderFloat("Y-Axis", &Camera::m_CameraPosition.y, -100.0f, 100.0f);
+				ImGui::SliderFloat("Z-Axis", &Camera::m_CameraPosition.z, -10.0f, 12.0f);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
 
