@@ -84,4 +84,9 @@
 	What is a camera ? 
 	It doesn't actually exist,  so you just move the geometry around, that is what happens in game engines aswell 
 	It is just more intuitive this way. 
+	To create a camera: 
+	1. Need the location of the camera in the world space
+	2. Need a position where the camera is pointing at 
+	3. To get the position the camera is pointing at you just the position of the camera and the position of the object it is trying to look at, substract those two vectors
+		and you get a direction vector to where the camera is pointing towards. 
 */
