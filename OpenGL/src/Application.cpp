@@ -26,9 +26,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 // Define instances
-glm::vec3 Camera::m_CameraPosition;
-glm::vec3 Camera::m_CameraFront;
-glm::vec3 Camera::m_CameraUp;
+
 float Camera::m_CameraSpeed = deltaTime * 2.5f;
 
 
@@ -44,8 +42,8 @@ int main(void)
 		return -1;
 
 	/* Switch to OpenGL core profile */
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Create a windowed mode window and its OpenGL context */
@@ -139,10 +137,7 @@ int main(void)
 
 		/************************************************************************/
 		Camera camera(window);
-		// Variables to control the camera
-		Camera::m_CameraPosition = glm::vec3(0.0f, 0.0f, 3.0f);		// Position of the camera
-		Camera::m_CameraFront = glm::vec3(0.0f, 0.0f, -1.0f);		// The direction vector we want the camera to be looking at
-		Camera::m_CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);		
+		camera.enableMouseInput();
 		/************************************************************************/
 
 
@@ -158,7 +153,7 @@ int main(void)
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
 
-			// Start polling for continous input
+			// Start polling for continuous input
 			camera.processInput();
 
 			/* Bind all the buffers again before issuing a draw call */
