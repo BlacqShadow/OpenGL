@@ -66,6 +66,7 @@ public:
 		m_Stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
 	}
 
+
 	// Get the elements
 	inline const std::vector<VertexBufferElement> GetElements() const { return m_Elements; }
 

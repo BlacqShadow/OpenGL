@@ -1,8 +1,6 @@
-﻿  Camera.cpp
-d:\dev\opengl\opengl\opengl\src\camera.cpp(61): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dev\opengl\opengl\opengl\src\camera.cpp(62): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dev\opengl\opengl\opengl\src\camera.cpp(65): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dev\opengl\opengl\opengl\src\camera.cpp(66): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dev\opengl\opengl\opengl\src\camera.cpp(68): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\dev\opengl\opengl\opengl\src\camera.cpp(69): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  Application.cpp
+d:\dev\opengl\opengl\opengl\src\application.cpp(124): warning C4018: '<': signed/unsigned mismatch
+d:\dev\opengl\opengl\opengl\src\application.cpp(236): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\dev\opengl\opengl\opengl\src\application.cpp(219): warning C4101: 'pitch': unreferenced local variable
+d:\dev\opengl\opengl\opengl\src\application.cpp(220): warning C4101: 'yaw': unreferenced local variable
   OpenGL.vcxproj -> D:\dev\OpenGL\OpenGL\bin\Win32\Debug\OpenGL.exe

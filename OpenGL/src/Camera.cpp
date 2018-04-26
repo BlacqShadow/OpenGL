@@ -14,6 +14,7 @@ bool Camera::s_FirstMouse;
 glm::vec3 Camera::m_CameraPosition;
 glm::vec3 Camera::m_CameraFront;
 glm::vec3 Camera::m_CameraUp;
+float Camera::m_CameraSpeed;
 
 // When initializing the window context for callback functions
 Camera::Camera(GLFWwindow* window)
@@ -21,7 +22,7 @@ Camera::Camera(GLFWwindow* window)
 {
 	m_LastX = 1280.0f / 2.0f;
 	m_LastY = 720.0f / 2.0f;
-	m_Sensitivity = 0.05f;
+	m_Sensitivity = 0.15f;
 	s_FirstMouse = true;
 
 	// Variables to control the camera
@@ -43,18 +44,17 @@ Camera::Camera(GLFWwindow* window)
 Camera::~Camera()
 {
 }
+
 void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	// Exit out of the viewport when esc is pressed
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-
 }
 
 
 void Camera::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
-	std::cout << "MOUSE MOVING" << std::endl;
 	// Check to see if the program is running for the very first time
 	if (s_FirstMouse)
 	{
@@ -97,8 +97,6 @@ void Camera::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 void Camera::processInput()
 {
 	m_CameraSpeed = 2.5f * deltaTime;
-	if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
-		std::cout << "W PRESSED" << std::endl;
 	if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
 		m_CameraPosition += m_CameraSpeed * m_CameraFront;
 	if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)

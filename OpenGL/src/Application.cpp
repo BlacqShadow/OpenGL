@@ -25,9 +25,12 @@
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// Define instances
+// 3D object loading
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
 
-float Camera::m_CameraSpeed = deltaTime * 2.5f;
+#include <vector>
 
 
 
@@ -65,41 +68,123 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << std::endl;
 	// Add a scope so that the objects ib and vb objects are destroyed before the openGL context
 	{
+
+		/***************************************ASSIMP OBJ LOADING*******************************************/
+		// Variables to store the extracted data
+		std::vector<unsigned int> indices;
+		std::vector<glm::vec3> vertices;
+		std::vector <glm::vec2> uvs;
+		std::vector<glm::vec3> normals;
+
+		Assimp::Importer importer;
+		// Read the obj file in using assimp
+		const aiScene* scene = importer.ReadFile("res/models/cube.obj", 0);
+		if (!scene)
+		{
+			std::cout << "Error: " << importer.GetErrorString() << std::endl;
+
+		}
+		// get a pointer to the mesh
+		const aiMesh* mesh = scene->mMeshes[0];
+
+		// Increase the capacity of the vector to store n number of vertices
+		vertices.reserve(mesh->mNumVertices);
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		{
+			aiVector3D pos = mesh->mVertices[i];
+			vertices.push_back(glm::vec3(pos.x, pos.y, pos.z));
+		}
+		// Fill texture co-ordinates
+		uvs.reserve(mesh->mNumVertices);
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		{
+			aiVector3D UVW = mesh->mTextureCoords[0][i];
+			uvs.push_back(glm::vec2(UVW.x, UVW.y));
+		}
+
+		// Fill vertex normals
+		normals.reserve(mesh->mNumVertices);
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		{
+			aiVector3D n = mesh->mNormals[i];
+			normals.push_back(glm::vec3(n.x, n.y, n.z));
+		}
+
+		// Fill face indices
+		indices.reserve(3 * mesh->mNumFaces);
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+			// Assume the model has only triangles.
+			indices.push_back(mesh->mFaces[i].mIndices[0]);
+			indices.push_back(mesh->mFaces[i].mIndices[1]);
+			indices.push_back(mesh->mFaces[i].mIndices[2]);
+		}
+
+		// The idea is to take out the verticies from glm::vec3 type and put it in a simple array
+		std::vector<float> linearVerticies;
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			linearVerticies.push_back(vertices[i].x);
+			linearVerticies.push_back(vertices[i].y);
+			linearVerticies.push_back(vertices[i].z);
+			linearVerticies.push_back(uvs[i].x);
+			linearVerticies.push_back(uvs[i].y);
+			
+		}
+		
+
+		/*****************************************************************************************************/
 		// First two are Vertex positions,
 		// Next Two(same lines) - texture co-ordinates. (0.0 start, 1.0 finish)(Starts bottom left)
-		float positions[] = {
-			// Positions        Tex-Coord
-			-0.5f,  0.5f, 0.0f,	0.0f, 1.0f,// 0
-			 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,// 1
-			 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,// 2
-			-0.5f, -0.5f, 0.0f,	0.0f, 0.0f // 3
-		};
+		//float positions[] = {
+		//	// Positions        Tex-Coord
+		//	-0.5f,  0.5f, 0.0f,	0.0f, 1.0f,// 0
+		//	 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,// 1
+		//	 0.5f, -0.5f, 0.0f,	1.0f, 0.0f,// 2
+		//	-0.5f, -0.5f, 0.0f,	0.0f, 0.0f // 3
+		//};
 
 		/* To prevent vertex duplication, using indices to refer to the vertex we need to draw a square. */
-		unsigned int indices[] = {
+		/*unsigned int indices[] = {
 			0, 1, 2,
 			2, 3, 0
-		};
+		};*/
 		
 		/* BLENDING */
 		// Enable blending
 		GLCall(glEnable(GL_BLEND));
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-		// Create a Vertex Array Object
+		// Enable Depth buffer testing
+		GLCall(glEnable(GL_DEPTH_TEST));
+
+		// Create a Vertex Array Object for buffer vertices
 		VertexArray va;
+		// Create a Vertex Array Object for buffer texture co-ordinates
+		VertexArray texVA;
+
+		
 		// Create a Vertex buffer
-		VertexBuffer vb(positions, 5 * 4 * sizeof(float));
-		// Create the layout of the buffer
-		VertexBufferLayout layout;
+		VertexBuffer vb(&linearVerticies[0], linearVerticies.size() * sizeof(float));
+		// Create another vertex buffer for texture coordinates
+		//VertexBuffer vbTex(&uvs, uvs.size() * sizeof(glm::vec2));
+
+		// Create the layout of the Verticies buffer
+		VertexBufferLayout verteciesLayout;
 		// Tell the layout that each vertex is made out of two floats
-		layout.Push<float>(3);
-		layout.Push<float>(2);	// For the texture co-ordinates
+		verteciesLayout.Push<float>(3);
+		verteciesLayout.Push<float>(2);
+
+		// Create the layout of the Tex coord buffer
+		//VertexBufferLayout texLayout;
+		//texLayout.Push<float>(2);
+
+
 		// Add the buffer to the Vertex Array object
 		// Add the layout to the VAO
-		va.AddBuffer(vb, layout);
+		va.AddBuffer(vb, verteciesLayout);
+		//texVA.AddBuffer(vbTex, texLayout);
 
-		IndexBuffer ib(indices, 6);
+		IndexBuffer ib(&indices[0], indices.size());
 
 		// Using a perspective matrix instead
 		glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
@@ -112,7 +197,7 @@ int main(void)
 		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 		// Pass in a uniform with the slot the texture is bound to. 
 		shader.SetUniform1i("u_Texture", 0);
-		Texture texture("res/textures/ChernoLogo.png");
+		Texture texture("res/textures/yellow-texture.jpg");
 
 		/* Unbind everything for vertex array demostration */
 		va.Unbind();
@@ -137,6 +222,7 @@ int main(void)
 
 		/************************************************************************/
 		Camera camera(window);
+		// Enable mouse input for the camera
 		camera.enableMouseInput();
 		/************************************************************************/
 
