@@ -78,11 +78,10 @@ int main(void)
 
 		Assimp::Importer importer;
 		// Read the obj file in using assimp
-		const aiScene* scene = importer.ReadFile("res/models/cube.obj", 0);
+		const aiScene* scene = importer.ReadFile("res/models/sphere.obj", 0);
 		if (!scene)
 		{
 			std::cout << "Error: " << importer.GetErrorString() << std::endl;
-
 		}
 		// get a pointer to the mesh
 		const aiMesh* mesh = scene->mMeshes[0];
