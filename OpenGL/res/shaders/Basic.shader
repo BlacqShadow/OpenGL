@@ -10,10 +10,16 @@ out vec2 v_TexCoord;
 // Take in the projection matrix
 // MODEL VIEW PROJECTION MATRIX
 uniform mat4 u_MVP; 
+uniform mat4 u_Translate;
+uniform float u_Time;
 
 void main()
 {
-	gl_Position = u_MVP * position;
+	mat4 translate = mat4(vec4(1, 0, 0, 0),
+		vec4(0, 1, 0, 0),
+		vec4(0, 0, 1, 0),
+		vec4(sin(radians(u_Time)) * 6.0f, cos(radians(u_Time)) * 2.0f, 0.0f, 1.0f));
+	gl_Position = u_MVP * translate * position;
 	v_TexCoord = texCoord;
 };
 

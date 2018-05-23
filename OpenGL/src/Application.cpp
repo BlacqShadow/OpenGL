@@ -226,7 +226,7 @@ int main(void)
 		/************************************************************************/
 
 
-
+		float time = 0.0f;
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
@@ -248,7 +248,11 @@ int main(void)
 			//Keep the matrices updated in real time
 			glm::mat4 mvp = proj * camera.GetViewMatrix() * model;
 			// SET the projection matrix in the shader
+			glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f * sin(time), cos(time) * 2.0f , 0.0f));
 			shader.SetUniformMat4f("u_MVP", mvp);
+			shader.SetUniform1f("u_Time", time);
+			//shader.SetUniformMat4f("u_Translate", translate);
+			time += 1.0f;
 			// Use the renderer to draw stuff 
 			renderer.Draw(va, ib, shader);
 			
