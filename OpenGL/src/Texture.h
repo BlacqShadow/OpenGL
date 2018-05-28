@@ -5,6 +5,8 @@
 class Texture
 {
 private:
+	// does it contain a diffuse or specular texture; 
+	std::string m_Type;
 	unsigned int m_RendererID;
 	std::string m_FilePath;
 	unsigned char* m_LocalBuffer;

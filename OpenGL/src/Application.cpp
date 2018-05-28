@@ -32,7 +32,7 @@ float lastFrame = 0.0f;
 
 #include <vector>
 
-
+#include "Model.h"
 
 
 int main(void)
@@ -78,7 +78,7 @@ int main(void)
 
 		Assimp::Importer importer;
 		// Read the obj file in using assimp
-		const aiScene* scene = importer.ReadFile("res/models/sphere.obj", 0);
+		const aiScene* scene = importer.ReadFile("res/models/cube.obj", 0);
 		if (!scene)
 		{
 			std::cout << "Error: " << importer.GetErrorString() << std::endl;
@@ -148,6 +148,19 @@ int main(void)
 			2, 3, 0
 		};*/
 		
+
+		// How do I want ot use model loading 
+		// I want my model to be able to handle multiple meshes 
+		//Model mymodel = load(this file);
+		//// Returns an array of meshes
+		//Meshes arrayOfMeshes[] = myModel.meshes();
+		//// for each mesh
+		//foreach(mesh m in arrayofMeshes[])
+		//{
+		//	// So every mesh needs to have vertex array and an index buffer, just like we created for the code below
+		//	renderer.Draw(m.va, m.ib, shader);
+		//}
+
 		/* BLENDING */
 		// Enable blending
 		GLCall(glEnable(GL_BLEND));
@@ -161,7 +174,11 @@ int main(void)
 		// Create a Vertex Array Object for buffer texture co-ordinates
 		VertexArray texVA;
 
-		
+		// Mesh load test
+		Model test("res/models/JackOOBJ.obj");
+		const std::vector<Mesh*> meshes = test.GetMeshes();
+
+
 		// Create a Vertex buffer
 		VertexBuffer vb(&linearVerticies[0], linearVerticies.size() * sizeof(float));
 		// Create another vertex buffer for texture coordinates
@@ -249,8 +266,15 @@ int main(void)
 			glm::mat4 mvp = proj * camera.GetViewMatrix() * model;
 			// SET the projection matrix in the shader
 			shader.SetUniformMat4f("u_MVP", mvp);
+
+			for (unsigned int i = 0; i < meshes.size(); i++)
+			{
+				//meshes[0].VA().Bind();
+				//meshes[0].IB().Bind();
+				renderer.Draw(meshes[i]->VA(), meshes[i]->IB(), shader);
+			}
 			// Use the renderer to draw stuff 
-			renderer.Draw(va, ib, shader);
+			//renderer.Draw(va, ib, shader);
 			
 			// IMGUI STUFF
 			{
@@ -268,6 +292,8 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
+
+		
 	}
 	// Cleanup
 	ImGui_ImplGlfwGL3_Shutdown();
