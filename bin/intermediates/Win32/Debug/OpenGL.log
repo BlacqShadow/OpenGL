@@ -1,6 +1,0 @@
-﻿  Application.cpp
-d:\opengl\opengl\src\application.cpp(123): warning C4018: '<': signed/unsigned mismatch
-d:\opengl\opengl\src\application.cpp(252): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\opengl\opengl\src\application.cpp(235): warning C4101: 'pitch': unreferenced local variable
-d:\opengl\opengl\src\application.cpp(236): warning C4101: 'yaw': unreferenced local variable
-  OpenGL.vcxproj -> D:\OpenGL\bin\Win32\Debug\OpenGL.exe
