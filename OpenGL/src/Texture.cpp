@@ -1,5 +1,5 @@
-#include "Texture.h"
 #include "stb_image\stb_image.h"
+#include "Texture.h"
 
 Texture::Texture(const std::string& path)
 	:m_RendererID(0), m_FilePath(path), m_LocalBuffer(nullptr), 
@@ -13,6 +13,11 @@ Texture::Texture(const std::string& path)
 	// Generate One Texture and assign it to renderer ID
 	GLCall(glGenTextures(1, &m_RendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
+
+	/* BLENDING */
+	// Enable blending
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 	// Set texture parameters
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
