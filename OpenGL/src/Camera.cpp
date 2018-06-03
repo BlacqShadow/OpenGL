@@ -49,7 +49,11 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	// Exit out of the viewport when esc is pressed
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		glfwSetCursorPosCallback(window, NULL);
+	}
+	
 }
 
 
@@ -121,6 +125,5 @@ void Camera::enableMouseInput()
 {
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(m_Window, MouseCallback);
-
 }
 
