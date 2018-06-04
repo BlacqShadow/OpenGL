@@ -13,6 +13,14 @@ uniform mat4 u_MVP;
 
 void main()
 {
+	// Dynamically change the position of the light
+	/*mat4 translate = mat4(vec4(1.0f, 0.0f, 0.0f, 0.0f),
+						  vec4(0.0f, 1.0f, 0.0f, 0.0f),
+						  vec4(0.0f, 0.0f, 1.0f, 0.0f),
+						  vec4(u_LightPosition.x, u_LightPosition.y, u_LightPosition.z, 1.0f));*/
+	// New position of the light
+	/*vec4 newPos = translate * position;*/
+
 	gl_Position = u_MVP * position;
 	v_TexCoord = texCoord;
 };

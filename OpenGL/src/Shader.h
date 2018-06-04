@@ -7,6 +7,7 @@
 
 // Include GLM
 #include <glm\glm.hpp>
+#include "glm\gtc\type_ptr.hpp"
 
 /* To return multiple return type we need to create a struct that we can return*/
 struct ShaderProgramSource
@@ -35,6 +36,7 @@ public:
 	// Set Uniforms
 	void SetUniform1i(const std::string& name, int value);
 	void SetUniform1f(const std::string& name, float value);
+	void SetUniform3f(const std::string& name, const glm::vec3& value);
 	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 	void SetUniformMat4f(const std::string& name, const glm::mat4 matrix);
 

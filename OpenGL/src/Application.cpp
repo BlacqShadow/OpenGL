@@ -71,7 +71,7 @@ int main(void)
 
 		/*************************MODEL LOADING******************/
 		// Mesh load test
-		Model test("res/models/cube.obj");
+		Model test("res/models/cube-flat.obj");
 		const std::vector<Mesh*> meshes = test.GetMeshes();
 		// Light source sphere load
 		Model sphere("res/models/Lightbulb.obj");
@@ -87,19 +87,22 @@ int main(void)
 		
 		// Create a light shader
 		Shader lightShader("res/shaders/Light.shader");
-		glm::vec3 lightPosition = glm::vec3(5.5f, 5.0f, -5.0f);
-		glm::mat4 lightModel = glm::scale(model, glm::vec3(0.005f));
-		lightModel = glm::translate(lightModel, lightPosition);
+		glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
+		glm::mat4 lightModel = glm::mat4(1.0f);
 
 
 		// Load and bind shader
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
 		shader.SetUniformMat4f("u_Model", model);
+		// Get a normal matrix to perform operation on normal vectors in world space;
+		glm::mat4 normal = glm::transpose(glm::inverse(model));
+		shader.SetUniformMat4f("u_Normal", normal);
 		
 		
 		/***************PASS VALUES INTO THE SHADER*********************/
-		glm::vec4 objectColor = glm::vec4(0.8f, 0.3f, 0.3f, 1.0f);
+		//glm::vec4 objectColor = glm::vec4(0.8f, 0.3f, 0.3f, 1.0f);
+		glm::vec4 objectColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
 		glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		// Pass in a uniform with the slot the texture is bound to. 
 		//shader.SetUniform1i("u_Texture", 0);
@@ -161,9 +164,11 @@ int main(void)
 			// SET the projection matrix in the shader
 			lightShader.SetUniformMat4f("u_MVP", mvp);
 			lightShader.SetUniform4f("u_LightColor", lightColor.x, lightColor.y, lightColor.z, lightColor.a);
+			// Dynamically adjust the posiition of the light
+			lightModel = glm::translate(model, lightPosition);
+			lightModel = glm::scale(lightModel, glm::vec3(0.005f));
 			/*******************************************************/
-			// Recalucate light Position
-			lightModel = glm::translate(lightModel, lightPosition);
+			
 
 			
 
@@ -181,6 +186,7 @@ int main(void)
 			shader.SetUniform4f("u_ObjectColor", objectColor.x, objectColor.y, objectColor.z, objectColor.a);
 			shader.SetUniform4f("u_LightColor", lightColor.x, lightColor.y, lightColor.z, lightColor.a);
 			shader.SetUniform4f("u_LightPosition", lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
+			shader.SetUniform3f("u_CameraPos", Camera::m_CameraPosition);
 			/*******************************************************/
 
 			// Our GUI solution
@@ -190,7 +196,7 @@ int main(void)
 				ImGui::Text("X: %.1f | Y: %.1f | Z: %.1f", Camera::m_CameraPosition.x, Camera::m_CameraPosition.y, Camera::m_CameraPosition.z);
 				ImGui::ColorEdit4("ObjectColor", glm::value_ptr(objectColor));
 				ImGui::ColorEdit4("LightColor", glm::value_ptr(lightColor));
-				ImGui::SliderFloat3("Light Position", glm::value_ptr(lightPosition), -50.0f, 50.0f);
+				ImGui::SliderFloat3("Light Position", glm::value_ptr(lightPosition), -10.0f, 10.0f);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
 
