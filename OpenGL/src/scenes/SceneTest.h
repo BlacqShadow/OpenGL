@@ -1,18 +1,24 @@
 #pragma once
 
 #include <iostream>
-#include "Scene.h"
 #include <string.h>
+#include "Scene.h"
 #include "Shader.h"
 #include "Model.h"
 #include "Camera.h"
+
+#include "glm\glm.hpp"
+#include "glm\gtc\matrix_transform.hpp"
+#include "glm\gtc\type_ptr.hpp"
+
+#include "imgui/imgui.h"
 
 namespace scene {
 	
 	class SceneTest : public Scene
 	{
 	public:
-		SceneTest();
+		SceneTest(GLFWwindow* window);
 		~SceneTest();
 
 		void OnUpdate(float deltaTime) override;
@@ -25,6 +31,8 @@ namespace scene {
 		Model m_Light;
 		Shader m_ObjectShader;
 		Shader m_LightShader;
+		std::vector<Mesh*> m_ObjectMeshes;
+		std::vector<Mesh*> m_LightMeshes; 
 
 		// Object Matrices
 		glm::mat4 m_ObjectModel;
@@ -41,10 +49,11 @@ namespace scene {
 		glm::vec4 m_LAmbientColor;
 		glm::vec4 m_LDiffuseColor;
 		glm::vec4 m_LSpecularColor;
+		float m_Shine;
 
 		// Camera and renderer
-		Renderer renderer;
-		Camera camera;
+		Renderer m_Renderer;
+		Camera m_Camera;
 		
 	};
 }

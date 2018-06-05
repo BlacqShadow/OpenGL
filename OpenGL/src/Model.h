@@ -18,7 +18,7 @@ private:
 public:
 	Model(const std::string& path);
 	~Model();
-	inline const std::vector<Mesh*> GetMeshes() const
+	inline std::vector<Mesh*> GetMeshes() const
 	{
 		return m_Meshes;
 	}

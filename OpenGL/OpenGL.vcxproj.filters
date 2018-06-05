@@ -891,10 +891,10 @@
     <ClInclude Include="src\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scenes\SceneTest.h">
+    <ClInclude Include="src\scenes\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scenes\Scene.h">
+    <ClInclude Include="src\scenes\SceneTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
