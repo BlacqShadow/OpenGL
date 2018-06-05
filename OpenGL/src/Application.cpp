@@ -86,13 +86,13 @@ int main(void)
 		glm::mat4 model;
 		
 		// Create a light shader
-		Shader lightShader("res/shaders/Light.shader");
+		Shader lightShader("res/shaders/Light.glsl");
 		glm::vec3 lightPosition = glm::vec3(1.2f, 1.0f, 2.0f);
 		glm::mat4 lightModel = glm::mat4(1.0f);
 
 
 		// Load and bind shader
-		Shader shader("res/shaders/Basic.shader");
+		Shader shader("res/shaders/Basic.glsl");
 		shader.Bind();
 		shader.SetUniformMat4f("u_Model", model);
 		// Get a normal matrix to perform operation on normal vectors in world space;
@@ -101,12 +101,31 @@ int main(void)
 		
 		
 		/***************PASS VALUES INTO THE SHADER*********************/
-		//glm::vec4 objectColor = glm::vec4(0.8f, 0.3f, 0.3f, 1.0f);
-		glm::vec4 objectColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
-		glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		glm::vec4 ambientColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
+		glm::vec4 diffuseColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
+		glm::vec4 specularColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		float shine = 32.0f;
+
+		// Light Intensities
+		glm::vec4 L_ambientColor =  glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+		glm::vec4 L_diffuseColor =  glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		glm::vec4 L_specularColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+
+		shader.SetUniform4f("u_Material.ambient", ambientColor);
+		shader.SetUniform4f("u_Material.diffuse", diffuseColor);
+		shader.SetUniform4f("u_Material.specular", specularColor);
+		shader.SetUniform1f("u_Material.shine", shine);
+
+		shader.SetUniform4f("u_Light.ambient", L_ambientColor);
+		shader.SetUniform4f("u_Light.diffuse", L_diffuseColor);
+		shader.SetUniform4f("u_Light.specular", L_specularColor);
+		shader.SetUniform3f("u_Light.lightPos", lightPosition);
+
+		
+		
 		// Pass in a uniform with the slot the texture is bound to. 
 		//shader.SetUniform1i("u_Texture", 0);
-
 		// This is how you create a texture
 		//Texture texture("res/textures/yellow-texture.jpg");
 		// Bind the texture
@@ -137,7 +156,7 @@ int main(void)
 		{
 			/* Render here */
 			renderer.Clear();
-			float currentFrame = glfwGetTime();
+			float currentFrame = (float)glfwGetTime();
 			
 			// TODO: Impelemnt Delta time 
 			deltaTime = currentFrame - lastFrame;
@@ -163,14 +182,12 @@ int main(void)
 			/***************Set Uniforms***************************/
 			// SET the projection matrix in the shader
 			lightShader.SetUniformMat4f("u_MVP", mvp);
-			lightShader.SetUniform4f("u_LightColor", lightColor.x, lightColor.y, lightColor.z, lightColor.a);
+			lightShader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
 			// Dynamically adjust the posiition of the light
 			lightModel = glm::translate(model, lightPosition);
 			lightModel = glm::scale(lightModel, glm::vec3(0.005f));
 			/*******************************************************/
-			
-
-			
+						
 
 			// Draw the models, I should probably have the Models have their own draw function and call render on them
 			for (unsigned int i = 0; i < meshes.size(); i++)
@@ -183,9 +200,7 @@ int main(void)
 			/***************Set Uniforms***************************/
 			// SET the projection matrix in the shader
 			shader.SetUniformMat4f("u_MVP", mvp);
-			shader.SetUniform4f("u_ObjectColor", objectColor.x, objectColor.y, objectColor.z, objectColor.a);
-			shader.SetUniform4f("u_LightColor", lightColor.x, lightColor.y, lightColor.z, lightColor.a);
-			shader.SetUniform4f("u_LightPosition", lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
+			shader.SetUniform3f("u_Light.lightPos", lightPosition);
 			shader.SetUniform3f("u_CameraPos", Camera::m_CameraPosition);
 			/*******************************************************/
 
@@ -194,8 +209,6 @@ int main(void)
 				//ImGui::ShowDemoWindow();
 				ImGui::Text("Camera Co-ordinates: ");
 				ImGui::Text("X: %.1f | Y: %.1f | Z: %.1f", Camera::m_CameraPosition.x, Camera::m_CameraPosition.y, Camera::m_CameraPosition.z);
-				ImGui::ColorEdit4("ObjectColor", glm::value_ptr(objectColor));
-				ImGui::ColorEdit4("LightColor", glm::value_ptr(lightColor));
 				ImGui::SliderFloat3("Light Position", glm::value_ptr(lightPosition), -10.0f, 10.0f);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
