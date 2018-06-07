@@ -28,7 +28,7 @@ private:
 	// Store them for debugging purposes ? 
 	std::vector<Vertex> m_Vertices;
 	std::vector<unsigned int> m_Indices;
-	std::vector<Texture> m_Textures;
+	std::vector<Texture*> m_Textures;
 
 	// Each mesh needs to be able to spit out its VAO and IB for the renderer
 	VertexBuffer m_VB;
@@ -38,7 +38,7 @@ private:
 
 public: 
 	// Take in constant 
-	Mesh(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices,const std::vector<Texture>& textures);
+	Mesh(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices,const std::vector<Texture* >& textures);
 
 	// Return a reference to the IndexBuffer and Vertex Buffer
 	inline const VertexArray& VA() const
@@ -49,6 +49,7 @@ public:
 	{ 
 		return m_IB; 
 	}
+	const std::vector<Texture*>& Textures() const;
 
 
 };

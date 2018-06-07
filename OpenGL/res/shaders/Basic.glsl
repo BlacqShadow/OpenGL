@@ -52,7 +52,12 @@ uniform Light u_Light;
 // Store the material properties of the object 
 // Color the object will reflect under light
 struct Material {
-	vec4 ambient;
+	// Allow the shader to take in multiple textures. 
+	sampler2D Texture_Diffuse0;
+	sampler2D Texture_Diffuse1;
+	sampler2D Texture_Diffuse2;
+	sampler2D Texture_Specular0;
+	sampler2D Texture_Specular1;
 	vec4 diffuse;
 	vec4 specular;
 	float shine;
@@ -76,12 +81,7 @@ uniform vec3 u_CameraPos;
 uniform sampler2D u_Texture; // The actual color of the texture 
 
 							 
-// Allow the shader to take in multiple textures. 
-uniform sampler2D u_Texture_Diffuse1;
-uniform sampler2D u_Texture_Diffuse2;
-uniform sampler2D u_Texture_Diffuse3;
-uniform sampler2D u_Texture_Specular1;
-uniform sampler2D u_Texture_Specular2;
+
 
 void main()
 {
@@ -90,8 +90,8 @@ void main()
 	
 	// Lighting
 	// AMBIENT 
-	float ambientStrength = 0.1f;
-	vec4 ambient = u_Light.ambient * u_Material.ambient;
+	//float ambientStrength = 0.1f;
+	vec4 ambient = u_Light.ambient * u_Material.diffuse;
 	
 
 	// DIFFUSE - Get the dot product of the normal vector and the vector from 
@@ -118,6 +118,6 @@ void main()
 	// Color of this pixel will be the sum of ambient and diffuse times the color of the object
 	vec4 final = ambient + diffuse + specular;
 
-	//color = vec4(spec, 0.0f, 0.0f, 1.0f);
 	color = final;
+	//color = u_Material.diffuse;
 }

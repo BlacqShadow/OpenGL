@@ -77,8 +77,8 @@ int main(void)
 		ImGui_ImplGlfwGL3_Init(window, true);
 		ImGui::StyleColorsDark();
 
-		scene::Scene* myScene = new scene::SceneTest(window);
-		
+		//Texture tex("res/textures/test.png");
+		scene::SceneTest myScene(window);
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
@@ -93,9 +93,9 @@ int main(void)
 			
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
-			myScene->OnUpdate(0.0f);
-			myScene->OnRender();
-			myScene->OnImGuiRender();
+			myScene.OnUpdate(0.0f);
+			myScene.OnRender();
+			myScene.OnImGuiRender();
 
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
@@ -105,7 +105,7 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
-		delete myScene;
+		
 		
 	}
 	// Cleanup

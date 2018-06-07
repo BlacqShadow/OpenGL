@@ -14,6 +14,7 @@ class Model
 private:
 	// Using vectors to store all the arrays so it is a contiguous block of memory
 	std::vector<Mesh*> m_Meshes;
+	std::vector<Texture* > m_Textures;
 
 public:
 	Model(const std::string& path);
@@ -27,6 +28,6 @@ private:
 	void load(const std::string& path);
 	// Process the raw ai mesh retrieved using assimp
 	Mesh* processMesh(const aiMesh* mesh, const aiScene* scene);
-
+	std::vector<Texture* > LoadMaterialTextures(aiMaterial* material, aiTextureType type, std::string typeName);
 
 };

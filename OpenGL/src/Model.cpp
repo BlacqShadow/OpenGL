@@ -12,13 +12,17 @@ Model::~Model()
 	{
 		delete m_Meshes[i];
 	}
+	for (unsigned int i = 0; i < m_Textures.size(); i++)
+	{
+		delete m_Textures[i];
+	}
 }
 
 void Model::load(const std::string& path)
 {
 	Assimp::Importer importer;
 	// Read the obj file in using assimp
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
 	if (!scene)
 	{
 		std::cout << "Error: " << importer.GetErrorString() << std::endl;
@@ -37,7 +41,7 @@ Mesh* Model::processMesh(const aiMesh* mesh,const aiScene* scene)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	// TODO: Implement Textures
-	std::vector<Texture> textures;
+	std::vector<Texture* > textures;
 
 	// Reserve memory for vertices for optimization
 	vertices.reserve(mesh->mNumVertices);
@@ -83,9 +87,35 @@ Mesh* Model::processMesh(const aiMesh* mesh,const aiScene* scene)
 	}
 
 	// TODO: Get the material data
+	if (mesh->mMaterialIndex >= 0)
+	{
+		// The main scene objects contains all the materials while each mesh has an index into that material array
+		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		std::vector<Texture* > diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "Texture_Diffuse");
+		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		std::vector<Texture* > specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "Texture_Specular");
+		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+	}
+
 	// We want our mesh to 
 	//Mesh meshtesting(vertices, indices, textures);
 	return new Mesh(vertices, indices, textures);
 
+}
+
+// Creates an array of the type of texture specified
+std::vector<Texture* > Model::LoadMaterialTextures(aiMaterial * material, aiTextureType type, std::string typeName)
+{
+	std::vector<Texture* > textures;
+	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
+	{
+		std::string relativePath = "res/models/";
+		aiString texturePath;
+		material->GetTexture(type, i, &texturePath);
+		std::string str = texturePath.C_Str();
+		str = relativePath + str;
+		textures.push_back(new Texture(str, typeName));
+	}
+	return textures;
 }
 

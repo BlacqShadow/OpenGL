@@ -14,13 +14,15 @@ namespace scene {
 		m_LightMeshes = m_Light.GetMeshes();
 
 		// Set the position of the light
-		m_LightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+		m_LightPos = glm::vec3(1.2f, 1.0f, 5.0f);
 
 		// Object Material
 		m_OAmbientColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
 		m_ODiffuseColor = glm::vec4(1.0f, 0.5f, 0.31f, 1.0f);
 		m_OSpecularColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
 		m_Shine = 32.0f;
+
+		//m_ObjectModel = glm::scale(m_ObjectModel, glm::vec3(0.05f));
 
 		// Light Properties
 		m_LAmbientColor  = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -36,7 +38,7 @@ namespace scene {
 		m_ObjectShader.Bind();
 		m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
 		m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
-		m_ObjectShader.SetUniform4f("u_Material.ambient", m_OAmbientColor);
+		//m_ObjectShader.SetUniform4f("u_Material.ambient", m_OAmbientColor);
 		m_ObjectShader.SetUniform4f("u_Material.diffuse", m_ODiffuseColor);
 		m_ObjectShader.SetUniform4f("u_Material.specular", m_OSpecularColor);
 		m_ObjectShader.SetUniform1f("u_Material.shine", m_Shine);
@@ -81,6 +83,7 @@ namespace scene {
 			// Renderer takes in a vertex array, Index buffer and a shader to draw stuff
 			m_Renderer.Draw(m_ObjectMeshes[i]->VA(), m_ObjectMeshes[i]->IB(), m_ObjectShader);
 		}
+		//m_Renderer.Draw(m_Object, m_ObjectShader);
 
 		for (unsigned int i = 0; i < m_LightMeshes.size(); i++)
 		{
