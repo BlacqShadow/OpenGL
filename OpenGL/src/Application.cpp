@@ -22,7 +22,7 @@
 #include "imgui/imgui_impl_glfw_gl3.h"
 
 #include "Model.h"
-#include "scenes\SceneTest.h"
+#include "scenes\SceneLMaps.h"
 
 // Keep track of time between frames
 // Not Implemented Yet
@@ -78,7 +78,7 @@ int main(void)
 		ImGui::StyleColorsDark();
 
 		//Texture tex("res/textures/test.png");
-		scene::SceneTest myScene(window);
+		scene::SceneLMaps myScene(window);
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))

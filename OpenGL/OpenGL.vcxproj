@@ -150,6 +150,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\scenes\SceneLMaps.cpp" />
     <ClCompile Include="src\scenes\SceneTest.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.glsl" />
     <None Include="res\shaders\Light.glsl" />
+    <None Include="res\shaders\LightMap.glsl" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
@@ -284,6 +286,7 @@
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\scenes\Scene.h" />
+    <ClInclude Include="src\scenes\SceneLMaps.h" />
     <ClInclude Include="src\scenes\SceneTest.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
@@ -442,6 +445,9 @@
     <ClInclude Include="src\VertexArray.h" />
     <ClInclude Include="src\VertexBufferLayout.h" />
     <ClInclude Include="src\Texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Users\Rudra\Downloads\container2.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

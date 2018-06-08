@@ -66,6 +66,9 @@
     <ClCompile Include="src\scenes\SceneTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenes\SceneLMaps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -403,6 +406,7 @@
     </None>
     <None Include="res\shaders\Basic.glsl" />
     <None Include="res\shaders\Light.glsl" />
+    <None Include="res\shaders\LightMap.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -897,5 +901,13 @@
     <ClInclude Include="src\scenes\SceneTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\scenes\SceneLMaps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Users\Rudra\Downloads\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
