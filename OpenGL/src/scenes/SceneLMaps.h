@@ -28,8 +28,12 @@ namespace scene {
 	private:
 		// Scene Models and Shaders
 		Model m_Object;
+		Model m_LightModel;
 		Shader m_ObjectShader;
+		Shader m_LightShader;
 		std::vector<Mesh*> m_ObjectMeshes;
+
+		const unsigned int m_NumLights = 4;
 
 		Texture m_DiffTex;
 		Texture m_SpecTex;
@@ -47,8 +51,16 @@ namespace scene {
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 		};
 
+		glm::vec4 m_LightPos[4] = {
+			glm::vec4(0.7f, 0.2f, 2.0f, 1.0f),
+			glm::vec4(2.3f, -3.3f, -4.0f, 1.0f),
+			glm::vec4(-4.0f, 2.0f, -12.0f, 1.0f),
+			glm::vec4(0.0f, 0.0f, -3.0f, 1.0f)
+		};
+
 		// Object Matrices
 		glm::mat4 m_ObjectModel;
+		glm::mat4 m_LightModelMat;
 		glm::mat4 m_Proj;
 		glm::mat4 m_Normal;
 		glm::mat4 m_View;

@@ -80,30 +80,36 @@ uniform vec3 u_CameraPos;
 
 uniform sampler2D u_Texture; // The actual color of the texture 
 
-							 
+vec4 CalcDiffLighting();
 
 
 void main()
 {
-	/* Specify the output color of each pixel */
-	//vec4 texColor = texture(u_Texture, v_TexCoord);
-	
+	// Calculate Diffuse Lighting 
+	vec4 diff = CalcDiffLighting();
+
+	// Final output color
+	color = diff;
+}
+
+vec4 CalcDiffLighting()
+{
 	// Lighting
 	// AMBIENT 
 	//float ambientStrength = 0.1f;
 	vec4 ambient = u_Light.ambient * u_Material.diffuse;
-	
+
 
 	// DIFFUSE - Get the dot product of the normal vector and the vector from 
 	// Normalize the incoming normal vector
 	vec4 norm = normalize(v_Normal);
 	// frag to light source 
 	// Vector from fragment to light source
-	vec4 vectorToLight = normalize(vec4(u_Light.lightPos,1.0f) - v_FragPos);
+	vec4 vectorToLight = normalize(vec4(u_Light.lightPos, 1.0f) - v_FragPos);
 	// The diffuse intensity will depend upon the dot product of these two vectors
 	float diffStrength = max(dot(norm, vectorToLight), 0.0f);
 	vec4 diffuse = u_Light.diffuse * (diffStrength * u_Material.diffuse);
-	
+
 	// SPECULAR
 	float specularIntensity = 0.5f;
 	float shine = 64.0f;
@@ -117,7 +123,5 @@ void main()
 
 	// Color of this pixel will be the sum of ambient and diffuse times the color of the object
 	vec4 final = ambient + diffuse + specular;
-
-	color = final;
-	//color = u_Material.diffuse;
+	return final;
 }

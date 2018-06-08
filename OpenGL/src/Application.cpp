@@ -23,6 +23,7 @@
 
 #include "Model.h"
 #include "scenes\SceneLMaps.h"
+#include "scenes/SceneTest.h"
 
 // Keep track of time between frames
 // Not Implemented Yet
@@ -78,6 +79,7 @@ int main(void)
 		ImGui::StyleColorsDark();
 
 		//Texture tex("res/textures/test.png");
+		//scene::SceneLMaps myScene(window);
 		scene::SceneLMaps myScene(window);
 
 		/* Loop until the user closes the window */
