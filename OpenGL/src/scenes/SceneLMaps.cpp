@@ -4,7 +4,7 @@
 
 namespace scene {
 	SceneLMaps::SceneLMaps(GLFWwindow* window)
-		:m_Object("res/models/cube-flat.obj"), m_ObjectShader("res/shaders/LightMap.glsl"), m_Camera(window), 
+		:m_Object("res/models/trex/TrexByJoel3d.fbx"), m_ObjectShader("res/shaders/LightMap.glsl"), m_Camera(window), 
 		m_DiffTex("res/textures/container2.png"), m_SpecTex("res/textures/specular.png"), m_LightModel("res/models/LightBulb.obj"), m_LightShader("res/shaders/Light.glsl")
 	{
 		// Initialize transformation matrices
@@ -30,16 +30,17 @@ namespace scene {
 
 		// Send uniform data to the object shader
 		m_ObjectShader.Bind();
+		m_ObjectModel = glm::scale(m_ObjectModel, glm::vec3(0.5f, 0.5f, 0.5f));
 		m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
 		m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
 		
 		// Bind the texture to a slot
-		m_DiffTex.Bind(0);
+		//m_DiffTex.Bind(0);
 		// Tell the GPU, this is the slot this texture is bound to 
-		m_ObjectShader.SetUniform1i("u_Material.Texture_Diffuse0", 0);
+		//m_ObjectShader.SetUniform1i("u_Material.Texture_Diffuse0", 0);
 
-		m_SpecTex.Bind(1);
-		m_ObjectShader.SetUniform1i("u_Material.Texture_Specular0", 1);
+		//m_SpecTex.Bind(1);
+		//m_ObjectShader.SetUniform1i("u_Material.Texture_Specular0", 1);
 		m_ObjectShader.SetUniform1f("u_Material.shine", m_Shine);
 		
 
@@ -108,21 +109,21 @@ namespace scene {
 	void SceneLMaps::OnRender()
 	{
 		m_Renderer.Clear();
-		for (unsigned int i = 0; i < 10; i++)
-		{
-			m_ObjectShader.Bind();
-			m_ObjectModel = glm::mat4(1.0f);
-			m_ObjectModel = glm::translate(m_ObjectModel, m_CubePositions[i]);
-			float angle = 20.0f * i;
-			m_ObjectModel = glm::rotate(m_ObjectModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			// Update the matrices
-			m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
-			m_Normal = glm::transpose(glm::inverse(m_ObjectModel));
-			m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
-			m_ObjectShader.SetUniformMat4f("u_MVP", m_Proj *  m_View * m_ObjectModel);
-			m_Renderer.Draw(m_Object, m_ObjectShader);
-		}
-
+		//for (unsigned int i = 0; i < 10; i++)
+		//{
+		//	m_ObjectShader.Bind();
+		//	m_ObjectModel = glm::mat4(1.0f);
+		//	m_ObjectModel = glm::translate(m_ObjectModel, m_CubePositions[i]);
+		//	float angle = 20.0f * i;
+		//	m_ObjectModel = glm::rotate(m_ObjectModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//	// Update the matrices
+		//	m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
+		//	m_Normal = glm::transpose(glm::inverse(m_ObjectModel));
+		//	m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
+		//	m_ObjectShader.SetUniformMat4f("u_MVP", m_Proj *  m_View * m_ObjectModel);
+		//	m_Renderer.Draw(m_Object, m_ObjectShader);
+		//}
+		m_Renderer.Draw(m_Object, m_ObjectShader);
 		for (unsigned int i = 0; i < m_NumLights; i++)
 		{
 			m_LightShader.Bind();

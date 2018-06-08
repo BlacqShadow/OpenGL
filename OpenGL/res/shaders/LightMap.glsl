@@ -114,6 +114,7 @@ void main()
 	}
 
 	color = result;
+	//color = vec4(texture(u_Material.Texture_Diffuse0, v_TexCoord).xyz, 1.0f);
 	//color = u_Material.diffuse;
 }
 
