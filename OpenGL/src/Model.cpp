@@ -109,7 +109,7 @@ std::vector<Texture* > Model::LoadMaterialTextures(aiMaterial * material, aiText
 	std::vector<Texture* > textures;
 	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{
-		std::string relativePath = "res/models/trex/";
+		std::string relativePath = "res/models/";
 		aiString texturePath;
 		material->GetTexture(type, i, &texturePath);
 		std::string str = texturePath.C_Str();
