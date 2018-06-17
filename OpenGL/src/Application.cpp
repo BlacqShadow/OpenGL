@@ -82,6 +82,7 @@ int main(void)
 		//scene::SceneLMaps myScene(window);
 		scene::SceneLMaps myScene(window);
 
+
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{

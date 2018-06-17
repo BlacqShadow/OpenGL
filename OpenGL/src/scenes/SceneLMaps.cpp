@@ -4,7 +4,7 @@
 
 namespace scene {
 	SceneLMaps::SceneLMaps(GLFWwindow* window)
-		:m_Object("res/models/Nanosuit.obj"), m_ObjectShader("res/shaders/LightMap.glsl"), m_Camera(window), 
+		:m_Object("res/models/trex/Trex.fbx"), m_ObjectShader("res/shaders/LightMap.glsl"), m_Camera(window), 
 		m_DiffTex("res/textures/container2.png"), m_SpecTex("res/textures/specular.png"), m_LightModel("res/models/LightBulb.obj"), m_LightShader("res/shaders/Light.glsl")
 	{
 		// Initialize transformation matrices

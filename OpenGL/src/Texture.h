@@ -9,6 +9,14 @@ private:
 	std::string m_FilePath;
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;
+	std::string m_Sides[6] = {
+		"right.jpg",
+		"left.jpg",
+		"top.jpg",
+		"bottom.jpg",
+		"frong.jpg",
+		"back.jpg"
+	};
 public:
 	// does it contain a diffuse or specular texture;
 	std::string m_Type;
