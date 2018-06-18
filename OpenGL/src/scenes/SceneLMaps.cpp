@@ -4,8 +4,8 @@
 
 namespace scene {
 	SceneLMaps::SceneLMaps(GLFWwindow* window)
-		:m_Object("res/models/trex/Trex.fbx"), m_ObjectShader("res/shaders/LightMap.glsl"), m_Camera(window), 
-		m_DiffTex("res/textures/container2.png"), m_SpecTex("res/textures/specular.png"), m_LightModel("res/models/LightBulb.obj"), m_LightShader("res/shaders/Light.glsl")
+		:m_Object("res/models/trex/Trex.fbx"), m_ObjectShader("res/shaders/LightMap.glsl"),m_Skybox("res/models/cube-flat.obj") ,m_CubeMapShader("res/shaders/SkyBox.glsl"), m_Camera(window), 
+		m_DiffTex("res/textures/container2.png"), m_SpecTex("res/textures/specular.png"), m_SkyBoxTex("res/textures/moon/", "cubemap"), m_LightModel("res/models/LightBulb.obj"), m_LightShader("res/shaders/Light.glsl")
 	{
 		// Initialize transformation matrices
 		m_Proj = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
@@ -28,6 +28,11 @@ namespace scene {
 		m_LDiffuseColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
 		m_LSpecularColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+		// Set uniform in the object shader
+		m_CubeMapShader.Bind();
+		m_SkyBoxTex.Bind(0);
+		m_CubeMapShader.SetUniform1i("u_SkyBox", 0);
+		
 		// Send uniform data to the object shader
 		m_ObjectShader.Bind();
 		m_ObjectModel = glm::scale(m_ObjectModel, glm::vec3(0.05f, 0.05f, 0.05f));
@@ -94,11 +99,15 @@ namespace scene {
 		
 		
 		
+		// Update the skybox model
+		m_CubeMapShader.Bind(); 
+		m_CubeMapShader.SetUniformMat4f("u_MVP", m_Proj * glm::mat4(glm::mat3(m_Camera.GetViewMatrix())) * m_SkyBoxModel);
 
 		// Update the Object Model
 		m_ObjectShader.Bind();
 		m_ObjectShader.SetUniformMat4f("u_MVP", m_Proj *  m_View * m_ObjectModel);
 		m_ObjectShader.SetUniform3f("u_CameraPos", Camera::m_CameraPosition);
+
 
 		// Update light positions every frame 
 		for (int i = 0; i < m_NumLights; i++)
@@ -123,6 +132,10 @@ namespace scene {
 		//	m_ObjectShader.SetUniformMat4f("u_MVP", m_Proj *  m_View * m_ObjectModel);
 		//	m_Renderer.Draw(m_Object, m_ObjectShader);
 		//}
+		// Disable the depth mask always enable drawing
+		GLCall(glDepthMask(GL_FALSE));
+		m_Renderer.Draw(m_Skybox, m_CubeMapShader);
+		GLCall(glDepthMask(GL_TRUE));
 		m_Renderer.Draw(m_Object, m_ObjectShader);
 		for (unsigned int i = 0; i < m_NumLights; i++)
 		{

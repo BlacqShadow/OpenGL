@@ -24,6 +24,7 @@
 #include "Model.h"
 #include "scenes\SceneLMaps.h"
 #include "scenes/SceneTest.h"
+#include "scenes/SceneCave.h"
 
 // Keep track of time between frames
 // Not Implemented Yet
@@ -80,7 +81,7 @@ int main(void)
 
 		//Texture tex("res/textures/test.png");
 		//scene::SceneLMaps myScene(window);
-		scene::SceneLMaps myScene(window);
+		scene::Scene* myScene = new scene::SceneCave(window);
 
 
 		/* Loop until the user closes the window */
@@ -96,9 +97,30 @@ int main(void)
 			
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
-			myScene.OnUpdate(0.0f);
-			myScene.OnRender();
-			myScene.OnImGuiRender();
+			myScene->OnUpdate(0.0f);
+			myScene->OnRender();
+			myScene->OnImGuiRender();
+			if (ImGui::BeginMainMenuBar())
+			{
+				if (ImGui::BeginMenu("Scenes"))
+				{
+					if (ImGui::MenuItem("Simple Lighting")) { 
+						delete myScene; 
+						myScene = new scene::SceneTest(window);
+					}
+					if (ImGui::MenuItem("Model & Lights & Skybox")) {
+						delete myScene;
+						myScene = new scene::SceneLMaps(window);
+					}
+					if (ImGui::MenuItem("Cave")) {
+						delete myScene;
+						myScene = new scene::SceneCave(window);
+					}
+					ImGui::EndMenu();
+				}
+				
+				ImGui::EndMainMenuBar();
+			}
 
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

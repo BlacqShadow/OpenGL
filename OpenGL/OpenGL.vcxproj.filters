@@ -69,6 +69,9 @@
     <ClCompile Include="src\scenes\SceneLMaps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenes\SceneCave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\vendor\glm\detail\func_common.inl">
@@ -407,6 +410,7 @@
     <None Include="res\shaders\Basic.glsl" />
     <None Include="res\shaders\Light.glsl" />
     <None Include="res\shaders\LightMap.glsl" />
+    <None Include="res\shaders\SkyBox.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -902,6 +906,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scenes\SceneLMaps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\SceneCave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

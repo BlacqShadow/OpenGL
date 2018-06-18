@@ -29,14 +29,17 @@ namespace scene {
 		// Scene Models and Shaders
 		Model m_Object;
 		Model m_LightModel;
+		Model m_Skybox;
 		Shader m_ObjectShader;
 		Shader m_LightShader;
+		Shader m_CubeMapShader;
 		std::vector<Mesh*> m_ObjectMeshes;
 
 		const unsigned int m_NumLights = 4;
 
 		Texture m_DiffTex;
 		Texture m_SpecTex;
+		Texture m_SkyBoxTex;
 
 		glm::vec3 m_CubePositions[10] = {
 			glm::vec3(0.0f,  0.0f,  0.0f),
@@ -64,6 +67,7 @@ namespace scene {
 		glm::mat4 m_Proj;
 		glm::mat4 m_Normal;
 		glm::mat4 m_View;
+		glm::mat4 m_SkyBoxModel;
 
 		// Object uniforms
 		glm::vec4 m_LightDir;

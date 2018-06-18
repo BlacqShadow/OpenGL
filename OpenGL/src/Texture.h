@@ -10,12 +10,12 @@ private:
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;
 	std::string m_Sides[6] = {
-		"right.jpg",
-		"left.jpg",
-		"top.jpg",
-		"bottom.jpg",
-		"frong.jpg",
-		"back.jpg"
+		 "right.png",
+		  "left.png",
+		   "top.png",
+		"bottom.png",
+		  "back.png",
+		 "front.png"
 	};
 public:
 	// does it contain a diffuse or specular texture;
