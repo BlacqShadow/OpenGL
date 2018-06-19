@@ -100,7 +100,7 @@ void Camera::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 
 void Camera::processInput()
 {
-	m_CameraSpeed = 2.5f * deltaTime;
+	m_CameraSpeed = 7.0f * deltaTime;
 	if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
 		m_CameraPosition += m_CameraSpeed * m_CameraFront;
 	if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
@@ -125,5 +125,16 @@ void Camera::enableMouseInput()
 {
 	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(m_Window, MouseCallback);
+	glfwSetMouseButtonCallback(m_Window, MouseButtonCallback);
 }
+
+void Camera::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetCursorPosCallback(window, MouseCallback);
+	}
+}
+
 

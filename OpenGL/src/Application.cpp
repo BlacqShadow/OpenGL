@@ -97,9 +97,6 @@ int main(void)
 			
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
-			myScene->OnUpdate(0.0f);
-			myScene->OnRender();
-			myScene->OnImGuiRender();
 			if (ImGui::BeginMainMenuBar())
 			{
 				if (ImGui::BeginMenu("Scenes"))
@@ -121,6 +118,9 @@ int main(void)
 				
 				ImGui::EndMainMenuBar();
 			}
+			myScene->OnUpdate(0.0f);
+			myScene->OnRender();
+			myScene->OnImGuiRender();
 
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

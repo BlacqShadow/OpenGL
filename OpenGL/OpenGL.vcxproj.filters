@@ -411,6 +411,7 @@
     <None Include="res\shaders\Light.glsl" />
     <None Include="res\shaders\LightMap.glsl" />
     <None Include="res\shaders\SkyBox.glsl" />
+    <None Include="res\shaders\Cave.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

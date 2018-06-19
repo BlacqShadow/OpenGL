@@ -53,7 +53,7 @@ namespace scene {
 	}
 	SceneTest::~SceneTest()
 	{
-
+		std::cout << "\n\nSimple Lighting Destructor called" << std::endl;
 	}
 	void SceneTest::OnUpdate(float deltaTime)
 	{

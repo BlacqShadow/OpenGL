@@ -87,7 +87,7 @@ void Texture::Bind(unsigned int slot) const
 	// Check if it is a cubemap, use the appropriate binding command 
 	if (m_Type == "cubemap")
 	{
-		GLCall((GL_TEXTURE0 + slot));
+		GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID));
 	}
 	else
@@ -101,4 +101,5 @@ void Texture::Bind(unsigned int slot) const
 void Texture::Unbind() const
 {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+	GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }

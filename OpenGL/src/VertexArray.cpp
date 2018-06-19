@@ -14,7 +14,7 @@ VertexArray::VertexArray()
 VertexArray::~VertexArray()
 {
 	GLCall(glDeleteVertexArrays(1, &m_RendererID));
-	std::cout << "Destructor Called" << std::endl;
+	//std::cout << "Destructor Called" << std::endl;
 }
 
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)

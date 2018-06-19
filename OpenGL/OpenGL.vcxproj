@@ -166,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.glsl" />
+    <None Include="res\shaders\Cave.glsl" />
     <None Include="res\shaders\Light.glsl" />
     <None Include="res\shaders\LightMap.glsl" />
     <None Include="res\shaders\SkyBox.glsl" />

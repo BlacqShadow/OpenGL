@@ -86,7 +86,7 @@ namespace scene {
 	}
 	SceneLMaps::~SceneLMaps()
 	{
-
+		std::cout << "\n\n scene LightMap Destructor called " << std::endl;
 	}
 	void SceneLMaps::OnUpdate(float deltaTime)
 	{
@@ -118,22 +118,10 @@ namespace scene {
 	void SceneLMaps::OnRender()
 	{
 		m_Renderer.Clear();
-		//for (unsigned int i = 0; i < 10; i++)
-		//{
-		//	m_ObjectShader.Bind();
-		//	m_ObjectModel = glm::mat4(1.0f);
-		//	m_ObjectModel = glm::translate(m_ObjectModel, m_CubePositions[i]);
-		//	float angle = 20.0f * i;
-		//	m_ObjectModel = glm::rotate(m_ObjectModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//	// Update the matrices
-		//	m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
-		//	m_Normal = glm::transpose(glm::inverse(m_ObjectModel));
-		//	m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
-		//	m_ObjectShader.SetUniformMat4f("u_MVP", m_Proj *  m_View * m_ObjectModel);
-		//	m_Renderer.Draw(m_Object, m_ObjectShader);
-		//}
+		
 		// Disable the depth mask always enable drawing
 		GLCall(glDepthMask(GL_FALSE));
+		
 		m_Renderer.Draw(m_Skybox, m_CubeMapShader);
 		GLCall(glDepthMask(GL_TRUE));
 		m_Renderer.Draw(m_Object, m_ObjectShader);
