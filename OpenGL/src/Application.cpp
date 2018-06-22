@@ -91,7 +91,7 @@ int main(void)
 			//renderer.Clear();
 			float currentFrame = (float)glfwGetTime();
 			
-			// TODO: Impelemnt Delta time , currently used for the camera class
+			// TODO: Imlpelemnt Delta time , currently used for the camera class
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			

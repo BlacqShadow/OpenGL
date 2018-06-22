@@ -41,6 +41,11 @@ namespace scene {
 		};
 		const unsigned int m_NumLights = 4;
 
+#pragma region Object Positions
+		glm::vec3 t_CavePosition;
+
+#pragma endregion Object Positions
+
 		void SetupCave();
 		void SetupLights();
 	public:

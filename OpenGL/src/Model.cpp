@@ -95,6 +95,7 @@ Mesh* Model::processMesh(const aiMesh* mesh,const aiScene* scene)
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		std::vector<Texture* > specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "Texture_Specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
 	}
 
 	// We want our mesh to 

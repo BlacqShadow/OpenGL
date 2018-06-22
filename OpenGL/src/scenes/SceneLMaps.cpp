@@ -4,7 +4,7 @@
 
 namespace scene {
 	SceneLMaps::SceneLMaps(GLFWwindow* window)
-		:m_Object("res/models/trex/Trex.fbx"), m_ObjectShader("res/shaders/LightMap.glsl"),m_Skybox("res/models/cube-flat.obj") ,m_CubeMapShader("res/shaders/SkyBox.glsl"), m_Camera(window), 
+		:m_Object("res/models/Lantern.obj"), m_ObjectShader("res/shaders/LightMap.glsl"),m_Skybox("res/models/cube-flat.obj") ,m_CubeMapShader("res/shaders/SkyBox.glsl"), m_Camera(window), 
 		m_DiffTex("res/textures/container2.png"), m_SpecTex("res/textures/specular.png"), m_SkyBoxTex("res/textures/moon/", "cubemap"), m_LightModel("res/models/LightBulb.obj"), m_LightShader("res/shaders/Light.glsl")
 	{
 		// Initialize transformation matrices
@@ -35,7 +35,7 @@ namespace scene {
 		
 		// Send uniform data to the object shader
 		m_ObjectShader.Bind();
-		m_ObjectModel = glm::scale(m_ObjectModel, glm::vec3(0.05f, 0.05f, 0.05f));
+		m_ObjectModel = glm::scale(m_ObjectModel, glm::vec3(1.0f, 1.0f, 1.0f));
 		m_ObjectShader.SetUniformMat4f("u_Model", m_ObjectModel);
 		m_ObjectShader.SetUniformMat4f("u_Normal", m_Normal);
 		

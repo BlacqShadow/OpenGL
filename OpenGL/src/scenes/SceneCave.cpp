@@ -10,7 +10,7 @@ namespace scene {
 		:m_Skybox("res/models/cube-flat.obj"), m_SkyTexture("res/textures/moon/", "cubemap"), m_SkyBoxShader("res/shaders/SkyBox.glsl"),
 		m_Cave("res/models/Cave.fbx"), m_CaveShader("res/shaders/Cave.glsl"), m_Light("res/models/Lightbulb.obj"), m_LightShader("res/shaders/Light.glsl"),
 		m_Proj(glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f)), m_CaveNormal(glm::transpose(glm::inverse(m_CaveModel))),
-		m_Camera(window)
+		m_Camera(window), t_CavePosition(glm::vec3(-20.0f, -7.0f, 5.0f))
 	{
 		// Configure skybox
 		m_SkyBoxShader.Bind();
@@ -42,7 +42,7 @@ namespace scene {
 
 		// Update cave uniforms
 		m_CaveShader.Bind();
-		
+		m_CaveModel = glm::translate(glm::mat4(1.0f), t_CavePosition);
 		m_CaveShader.SetUniformMat4f("u_MVP", m_Proj * m_View * m_CaveModel);
 		m_CaveShader.SetUniform3f("u_CameraPos", Camera::m_CameraPosition);
 		
@@ -84,10 +84,12 @@ namespace scene {
 		ImGui::Text("Camera Co-ordinates: ");
 		ImGui::Text("X: %.1f | Y: %.1f | Z: %.1f", Camera::m_CameraPosition.x, Camera::m_CameraPosition.y, Camera::m_CameraPosition.z);
 		ImGui::Separator();
-		ImGui::SliderFloat3("Light Pos 1", glm::value_ptr(m_LightPos[0]), -15.0f, 15.0f);
-		ImGui::SliderFloat3("Light Pos 2", glm::value_ptr(m_LightPos[1]), -15.0f, 15.0f);
-		ImGui::SliderFloat3("Light Pos 3", glm::value_ptr(m_LightPos[2]), -15.0f, 15.0f);
-		ImGui::SliderFloat3("Light Pos 4", glm::value_ptr(m_LightPos[3]), -15.0f, 15.0f);
+		ImGui::SliderFloat3("Light Pos 1", glm::value_ptr(m_LightPos[0]), -30.0f, 30.0f);
+		ImGui::SliderFloat3("Light Pos 2", glm::value_ptr(m_LightPos[1]), -30.0f, 30.0f);
+		ImGui::SliderFloat3("Light Pos 3", glm::value_ptr(m_LightPos[2]), -30.0f, 30.0f);
+		ImGui::SliderFloat3("Light Pos 4", glm::value_ptr(m_LightPos[3]), -30.0f, 30.0f);
+		ImGui::SliderFloat3("Cave Position", glm::value_ptr(t_CavePosition), -30.0f, 30.0f);
+		ImGui::Separator();
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	}
 
