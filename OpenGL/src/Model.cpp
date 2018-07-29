@@ -2,6 +2,7 @@
 
 Model::Model(const std::string& path)
 {
+
 	load(path);
 }
 

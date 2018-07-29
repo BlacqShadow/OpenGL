@@ -150,10 +150,12 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\scenes\Scene.cpp" />
     <ClCompile Include="src\scenes\SceneCave.cpp" />
     <ClCompile Include="src\scenes\SceneLMaps.cpp" />
     <ClCompile Include="src\scenes\SceneTest.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\util\Timer.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
@@ -293,6 +295,7 @@
     <ClInclude Include="src\scenes\SceneLMaps.h" />
     <ClInclude Include="src\scenes\SceneTest.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\util\Timer.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\func_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\func_exponential.hpp" />
