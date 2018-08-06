@@ -84,7 +84,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;src\vendor;$(SolutionDir)Dependencies\ASSIMP\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -100,6 +100,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;src\vendor;$(SolutionDir)Dependencies\ASSIMP\include</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib\;$(SolutionDir)Dependencies\GLEW\lib\Release\Win32\;$(SolutionDir)Dependencies\ASSIMP\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -115,7 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;src\vendor;$(SolutionDir)Dependencies\ASSIMP\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -135,6 +136,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;src\vendor;$(SolutionDir)Dependencies\ASSIMP\include</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
