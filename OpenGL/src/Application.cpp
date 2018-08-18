@@ -79,9 +79,17 @@ int main(void)
 		ImGui_ImplGlfwGL3_Init(window, true);
 		ImGui::StyleColorsDark();
 
-		//Texture tex("res/textures/test.png");
-		//scene::SceneLMaps myScene(window);
-		scene::Scene* myScene = new scene::SceneCave(window);
+		// 1. Make a current scene on which render and update funcitons will be called 
+		scene::Scene* currentScene = nullptr;
+		// 2. Create a menu with the ability to register scenes 
+		scene::SceneMenu* menuBar = new scene::SceneMenu(currentScene, window);
+		// 3. Set menu as the current scene 
+		currentScene = menuBar;
+
+		// 4. Register the various scenes we want our menu to display 
+		menuBar->RegisterScene<scene::SceneCave>("Cave");
+		menuBar->RegisterScene<scene::SceneLMaps>("Light Maps");
+		menuBar->RegisterScene<scene::SceneTest>("Simple Cube");
 
 
 		/* Loop until the user closes the window */
@@ -91,36 +99,20 @@ int main(void)
 			//renderer.Clear();
 			float currentFrame = (float)glfwGetTime();
 			
-			// TODO: Imlpelemnt Delta time , currently used for the camera class
+			// TODO: Implement Delta time , currently used for the camera class
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			
 			// IMGUI Frame can be put anywhere you want aslong as the imgui frame is in between them
 			ImGui_ImplGlfwGL3_NewFrame();
-			if (ImGui::BeginMainMenuBar())
+			
+			menuBar->OnImGuiRender();
+			if (currentScene != menuBar)
 			{
-				if (ImGui::BeginMenu("Scenes"))
-				{
-					if (ImGui::MenuItem("Simple Lighting")) { 
-						delete myScene; 
-						myScene = new scene::SceneTest(window);
-					}
-					if (ImGui::MenuItem("Model & Lights & Skybox")) {
-						delete myScene;
-						myScene = new scene::SceneLMaps(window);
-					}
-					if (ImGui::MenuItem("Cave")) {
-						delete myScene;
-						myScene = new scene::SceneCave(window);
-					}
-					ImGui::EndMenu();
-				}
-				
-				ImGui::EndMainMenuBar();
+				currentScene->OnUpdate(0.0f);
+				currentScene->OnRender();
+				currentScene->OnImGuiRender();
 			}
-			myScene->OnUpdate(0.0f);
-			myScene->OnRender();
-			myScene->OnImGuiRender();
 
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
@@ -130,10 +122,14 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
-		
+		delete currentScene;
+		currentScene = nullptr;
+		delete menuBar;
+		menuBar = nullptr;
+
 		
 	}
-	// Cleanup
+
 	ImGui_ImplGlfwGL3_Shutdown();
 	ImGui::DestroyContext();
 	glfwTerminate();

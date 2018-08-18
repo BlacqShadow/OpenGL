@@ -319,3 +319,6 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
+# Custom Ignore's
+OpenGL/OpenGL.vcxproj
+*.vcxproj.filters
