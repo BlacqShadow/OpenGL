@@ -3,6 +3,7 @@
 #include <functional>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <string>
 // Base class for all our test scenes 
 
 // New namespace to prevent naming conflicts with assimp 
