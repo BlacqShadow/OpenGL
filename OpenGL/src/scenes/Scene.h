@@ -28,6 +28,7 @@ namespace scene {
 
 		virtual void OnImGuiRender() override;
 
+		// A Method that returns an instance of whatever type that is passed in
 		template<typename T>
 		void RegisterScene(const std::string name)
 		{

@@ -19,20 +19,22 @@ public:
 	static float m_pitch;
 
 private:
-	static float m_LastX; 
+	static float m_LastX;
 	static float m_LastY;
 	static float m_Sensitivity;
 	static bool s_FirstMouse;
 
-	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-private:
-	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-	static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 public:
 	Camera(GLFWwindow* window);
 	~Camera();
 	void processInput();
 	static glm::mat4 GetViewMatrix();
 	void enableMouseInput();
+
+private:
+	static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+	static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
+
 };
 
