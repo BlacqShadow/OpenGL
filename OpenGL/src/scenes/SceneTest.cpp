@@ -49,7 +49,7 @@ namespace scene {
 		m_ObjectShader.SetUniform3f("u_Light.lightPos", m_LightPos);
 
 		// Enable camera mouse input
-		m_Camera.enableMouseInput();
+		m_Camera.EnableMouseInput();
 	}
 	SceneTest::~SceneTest()
 	{

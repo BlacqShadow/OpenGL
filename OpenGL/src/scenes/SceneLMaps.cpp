@@ -82,7 +82,7 @@ namespace scene {
 		
 
 		// Enable camera mouse input
-		m_Camera.enableMouseInput();
+		m_Camera.EnableMouseInput();
 	}
 	SceneLMaps::~SceneLMaps()
 	{

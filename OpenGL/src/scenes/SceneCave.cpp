@@ -10,7 +10,7 @@ namespace scene {
 		:m_Skybox("res/models/cube-flat.obj"), m_SkyTexture("res/textures/moon/", "cubemap"), m_SkyBoxShader("res/shaders/SkyBox.glsl"),
 		m_Cave("res/models/Cave.fbx"), m_CaveShader("res/shaders/Cave.glsl"), m_Light("res/models/Lightbulb.obj"), m_LightShader("res/shaders/Light.glsl"),
 		m_Proj(glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.1f, 100.0f)), m_CaveNormal(glm::transpose(glm::inverse(m_CaveModel))),
-		m_Camera(window), t_CavePosition(glm::vec3(-20.0f, -7.0f, 5.0f))
+		m_Camera(window), t_CavePosition(glm::vec3(0))
 	{
 		// Configure skybox
 		m_SkyBoxShader.Bind();
@@ -18,7 +18,7 @@ namespace scene {
 		m_SkyBoxShader.SetUniform1i("u_SkyBox", 0);
 		
 		// Enable mouse input
-		m_Camera.enableMouseInput();
+		m_Camera.EnableMouseInput();
 		// Set cave uniforms 
 		SetupCave();
 		// Set light uniforms 
@@ -42,7 +42,8 @@ namespace scene {
 
 		// Update cave uniforms
 		m_CaveShader.Bind();
-		m_CaveModel = glm::translate(glm::mat4(1.0f), t_CavePosition);
+		glm::quat rotationQuat(glm::vec3(0.0f, 3.14f / 2, 0.0f));
+		m_CaveModel = glm::translate(glm::mat4(1.0f), t_CavePosition) * glm::mat4(rotationQuat);
 		m_CaveShader.SetUniformMat4f("u_MVP", m_Proj * m_View * m_CaveModel);
 		m_CaveShader.SetUniform3f("u_CameraPos", Camera::m_CameraPosition);
 		
@@ -84,6 +85,8 @@ namespace scene {
 		ImGui::Text("Camera Co-ordinates: ");
 		ImGui::Text("X: %.1f | Y: %.1f | Z: %.1f", Camera::m_CameraPosition.x, Camera::m_CameraPosition.y, Camera::m_CameraPosition.z);
 		ImGui::Separator();
+		ImGui::DragFloat("Camera Distance", &Camera::m_Distance);
+		ImGui::DragFloat3("Focal Point", glm::value_ptr(Camera::m_FocalPoint));
 		ImGui::SliderFloat3("Light Pos 1", glm::value_ptr(m_LightPos[0]), -30.0f, 30.0f);
 		ImGui::SliderFloat3("Light Pos 2", glm::value_ptr(m_LightPos[1]), -30.0f, 30.0f);
 		ImGui::SliderFloat3("Light Pos 3", glm::value_ptr(m_LightPos[2]), -30.0f, 30.0f);
